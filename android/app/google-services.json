@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "883771127645",
+    "project_id": "i-want-8f880",
+    "storage_bucket": "i-want-8f880.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883771127645:android:809ad304d5ee7f2801dab4",
+        "android_client_info": {
+          "package_name": "com.roshanapps.i_want"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "883771127645-h83e6s6073t6kkd62dpkn5hbm9o530mp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZ2s9sIlyIXyxd-ns-j6awzeSxD-gxGxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "883771127645-h83e6s6073t6kkd62dpkn5hbm9o530mp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
