@@ -90,12 +90,12 @@ class _HomeState extends State<Home> {
                         width:(MediaQuery.of(context).size.width),
                       ),
                       Container(
-                        margin:EdgeInsets.fromLTRB(5,25,5,25),  
+                        margin:EdgeInsets.fromLTRB(15,25,5,25),  
                         width: (MediaQuery.of(context).size.width),
-                        child:new Text('Trending Items', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30))
+                        child:new Text('Trending Items', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
                       ),
                       Container(
-                        padding: EdgeInsets.fromLTRB(5,0,5,0),
+                        padding: EdgeInsets.fromLTRB(15,0,15,0),
                         height:210,
                         child:ListView(
                           scrollDirection: Axis.horizontal,
@@ -111,12 +111,12 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Container(
-                        margin:EdgeInsets.fromLTRB(5,25,5,25),  
+                        margin:EdgeInsets.fromLTRB(15,25,5,25),  
                         width: (MediaQuery.of(context).size.width),
-                        child:new Text('Categories', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30))
+                        child:new Text('Trending Categories', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
                       ),
                       Container(
-                        padding: EdgeInsets.fromLTRB(5,0,5,0),
+                        padding: EdgeInsets.fromLTRB(15,0,15,0),
                         height:210,
                         child:ListView(
                           scrollDirection: Axis.horizontal,
@@ -137,6 +137,30 @@ class _HomeState extends State<Home> {
               ]
             ),
           ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.blue,
+        showUnselectedLabels: true,
+        items: 
+        const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'Categories',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.man),
+            label: 'Profile',
+          ),
+        ],
+      ),
       );
   }
 
