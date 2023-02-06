@@ -63,10 +63,22 @@ class _StartpageState extends State<Startpage> {
             child:Column(
               children: <Widget>[
                 Container(
+                  decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
                   height: 120,
                   padding: EdgeInsets.fromLTRB(25,40,25,15), 
                   child:new TextField(
                     decoration: InputDecoration(
+                    
                     hintText: 'Search',
                     border: OutlineInputBorder(),
                     suffixIcon: IconButton(

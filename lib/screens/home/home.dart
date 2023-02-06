@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
     return new Scaffold(
       body:_widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.blueGrey,
         showUnselectedLabels: true,
