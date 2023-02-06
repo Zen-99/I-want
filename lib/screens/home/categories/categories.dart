@@ -11,8 +11,6 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-  @override
-  Widget build(BuildContext context) {
 
     Widget categories(String categoryType)=>Container(
       child:Card(
@@ -35,6 +33,44 @@ class _CategoriesState extends State<Categories> {
       width:150,
       height:100,
     );
+
+  List<String> categoryArr = ["Electronics","Furniture","Colths","Vehicles","Sport Items"];
+
+  List<Column> getCategoryList(){
+    List<Column> catergoryNameArr=[];
+    for(int i=0;i<categoryArr.length;i++){
+      catergoryNameArr.add(
+      Column(
+      children:[
+        Container(
+          margin:EdgeInsets.fromLTRB(15,25,5,25),  
+          width: (MediaQuery.of(context).size.width),
+          child:new Text(categoryArr[i], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(15,0,15,0),
+          height:210,
+          child:ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              categories(categoryArr[i]),
+              SizedBox(width: 8),
+              categories(categoryArr[i]),
+              SizedBox(width: 8),
+              categories(categoryArr[i]),
+              SizedBox(width: 8),
+              categories(categoryArr[i])
+            ],
+          ),
+        ),
+    ]),
+      );
+    }
+    return catergoryNameArr;
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
       appBar:AppBar(
@@ -64,113 +100,7 @@ class _CategoriesState extends State<Categories> {
         ],
       ),
       body: SingleChildScrollView(
-      child:Column(children: [
-        Container(
-          margin:EdgeInsets.fromLTRB(15,25,5,25),  
-          width: (MediaQuery.of(context).size.width),
-          child:new Text('Electronic Devices', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(15,0,15,0),
-          height:210,
-          child:ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              categories("Electronics"),
-              SizedBox(width: 12),
-              categories("Electronics"),
-              SizedBox(width: 12),
-              categories("Electronics"),
-              SizedBox(width: 12),
-              categories("Electronics")
-            ],
-          ),
-        ),
-        Container(
-          margin:EdgeInsets.fromLTRB(15,25,5,25),  
-          width: (MediaQuery.of(context).size.width),
-          child:new Text('Furniture', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(15,0,15,0),
-          height:210,
-          child:ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              categories("Furniture"),
-              SizedBox(width: 12),
-              categories("Furniture"),
-              SizedBox(width: 12),
-              categories("Furniture"),
-              SizedBox(width: 12),
-              categories("Furniture")
-            ],
-          ),
-        ),
-        Container(
-          margin:EdgeInsets.fromLTRB(15,25,5,25),  
-          width: (MediaQuery.of(context).size.width),
-          child:new Text('Colths', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(15,0,15,0),
-          height:210,
-          child:ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              categories("Colths"),
-              SizedBox(width: 12),
-              categories("Colths"),
-              SizedBox(width: 12),
-              categories("Colths"),
-              SizedBox(width: 12),
-              categories("Colths")
-            ],
-          ),
-        ),
-        Container(
-          margin:EdgeInsets.fromLTRB(15,25,5,25),  
-          width: (MediaQuery.of(context).size.width),
-          child:new Text('Vehicles', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(15,0,15,0),
-          height:210,
-          child:ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              categories("Vehicles"),
-              SizedBox(width: 12),
-              categories("Vehicles"),
-              SizedBox(width: 12),
-              categories("Vehicles"),
-              SizedBox(width: 12),
-              categories("Vehicles")
-            ],
-          ),
-        ),
-        Container(
-          margin:EdgeInsets.fromLTRB(15,25,5,25),  
-          width: (MediaQuery.of(context).size.width),
-          child:new Text('Sports Items', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(15,0,15,0),
-          height:210,
-          child:ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              categories("Sport Items"),
-              SizedBox(width: 12),
-              categories("Sport Items"),
-              SizedBox(width: 12),
-              categories("Sport Items"),
-              SizedBox(width: 12),
-              categories("Sport Items")
-            ],
-          ),
-        ),
-      ]),
+      child: Column(children:getCategoryList()),
       ),
     );
   }
