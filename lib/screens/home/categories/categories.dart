@@ -31,10 +31,10 @@ class _CategoriesState extends State<Categories> {
         ),
       ),
       width:150,
-      height:100,
+      height:80,
     );
 
-  List<String> categoryArr = ["Electronics","Furniture","Colths","Vehicles","Sport Items"];
+  List<String> categoryArr = ["Electronics","Furniture","Cloths","Vehicles","Sport Items"];
 
   List<Column> getCategoryList(){
     List<Column> catergoryNameArr=[];
