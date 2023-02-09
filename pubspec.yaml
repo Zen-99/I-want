@@ -38,6 +38,7 @@ dependencies:
   simple_search_bar: ^0.1.7
   easy_search_bar: ^2.4.2
   flutter_sticky_widgets: ^0.0.3
+  flutter_profile_picture: ^2.0.0
 
 
 
