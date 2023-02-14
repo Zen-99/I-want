@@ -18,15 +18,39 @@ class _AuthenticateState extends State<Authenticate> {
         child:Container(
           // color: Colors.amber,
           width: 300,
-          height:300,
+          height:500,
           child: Column(
             children: [
-              Text("Login"),
+              Container(
+                alignment: Alignment.topLeft,
+                width: double.infinity,
+                child:Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Proceed with your",textAlign: TextAlign.left,style: TextStyle(fontSize: 35)),
+                  Text("Login",textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 35)),
+                ],
+              )),
+              
+              SizedBox(height: 40),
               Form(
                 key:_formkey,
                 child: Column(
                   children: [
                     TextFormField(
+                      
+                      decoration: InputDecoration(
+                        hintText: "Enter user name here.",
+                        focusColor: Colors.blueGrey,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              width: 2, color: Colors.blue), //<-- SEE HERE
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 3, color: Colors.blue), //<-- SEE HERE
+                        ),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Empty';
@@ -34,8 +58,20 @@ class _AuthenticateState extends State<Authenticate> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 6),
+                    SizedBox(height: 20),
                     TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Enter password here.",
+                        focusColor: Colors.blueGrey,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              width: 2, color: Colors.blue), //<-- SEE HERE
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 3, color: Colors.blue), //<-- SEE HERE
+                        ),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Empty';
@@ -43,12 +79,38 @@ class _AuthenticateState extends State<Authenticate> {
                         return null;
                       },
                     ),
-                     SizedBox(height: 20),
-                    ElevatedButton(
+                    SizedBox(height: 20),
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.topRight,
+                      child:TextButton(
+                        onPressed: () {
+                          
+                        },
+                        child: const Text('Forgot password?'),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      width: double.infinity,
+                      height: 50,
+                      child:ElevatedButton(
+                      
                       onPressed: () {
                         
                       },
-                      child: const Text('Login'),
+                      child: const Text('Login',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                    ),
+                    ),
+                    SizedBox(height: 50),
+                    Container(
+                      width: double.infinity,
+                      child:TextButton(
+                        onPressed: () {
+                          
+                        },
+                        child: const Text('Do you have an account? Sign up now'),
+                      ),
                     ),
                   ],
                 )
