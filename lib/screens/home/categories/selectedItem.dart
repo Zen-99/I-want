@@ -1,17 +1,20 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:slide_digital_clock/slide_digital_clock.dart';
 import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import "package:flutter/material.dart";
+
 
 class SelectedItem extends StatefulWidget {
   const SelectedItem({super.key});
 
+  
   @override
   State<SelectedItem> createState() => _SelectedItemState();
 }
 
 class _SelectedItemState extends State<SelectedItem> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,25 +46,24 @@ class _SelectedItemState extends State<SelectedItem> {
       ),
       body: Column(
         children: [
+          SizedBox(height: 30),
+          Text("Time Remaining",style: TextStyle(fontSize: 25)),
           SizedBox(height: 20),
-          Text("Time Remaining"),
-          SizedBox(height: 20),
-          DigitalClock(
-            hourDigitDecoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.blue, width: 5)),
-            minuteDigitDecoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.blue, width: 5)),
-            secondDigitDecoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.blue,width: 5),
-                shape: BoxShape.circle),
-            secondDigitTextStyle: Theme.of(context)
-                .textTheme
-                .caption!
-                .copyWith(color: Colors.blue),
+          TimerCountdown(
+            format: CountDownTimerFormat.daysHoursMinutesSeconds,
+            endTime: DateTime.now().add(
+              Duration(
+                days: 5,
+                hours: 14,
+                minutes: 27,
+                seconds: 34,
+              ),
+            ),
+            onEnd: () {
+              print("Timer finished");
+            },
           ),
+          SizedBox(height: 30),
           CarouselSlider(
             options: CarouselOptions(
               height: 250.0,
@@ -88,7 +90,31 @@ class _SelectedItemState extends State<SelectedItem> {
             }).toList(),
           ),
           SizedBox(height: 20),
-
+          Container(
+            margin: EdgeInsets.all(15),
+            height: 25,
+            width: MediaQuery.of(context).size.width,
+            child:Text("Samsung A52",textAlign: TextAlign.left,style: TextStyle(fontSize: 25)),
+          ),
+          
+          SizedBox(height: 10),
+          Container(
+            margin: EdgeInsets.all(15),
+            height: 20,
+            width: MediaQuery.of(context).size.width,
+            child: Row(children: [
+              Text("Current Price",style: TextStyle(fontSize: 20)),
+              SizedBox(width: 20),
+              Text("Rs.4900.00",style: TextStyle(fontSize: 20)),
+            ]),
+          ),
+          Container(
+            margin: EdgeInsets.all(15),
+            child: Column(children: [
+              Text("Comments",style: TextStyle(fontSize: 15)),
+              
+            ]),
+          )
         ]
       ),
     );
