@@ -45,6 +45,7 @@ dependencies:
   flutter_timer_countdown: ^1.0.5
   comment_box: ^0.0.18
   dropdown_button2: ^1.9.4
+  image_picker: ^0.8.6+3
   # comment_box: ^0.0.18
 
 
