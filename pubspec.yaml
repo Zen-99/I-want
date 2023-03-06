@@ -46,6 +46,8 @@ dependencies:
   comment_box: ^0.0.18
   dropdown_button2: ^1.9.4
   image_picker: ^0.8.6+3
+  fl_chart: ^0.61.0
+  syncfusion_flutter_charts: ^20.4.52
   # comment_box: ^0.0.18
 
 
