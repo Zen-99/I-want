@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:i_want/screens/home/home.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({super.key});
@@ -10,7 +11,7 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
-  static Future<User?> loginUsingEmailPassword({required String email,required String password}) async {
+  static Future<User?> loginUsingEmailPassword({required String email,required String password,required BuildContext context}) async {
     FirebaseAuth auth =FirebaseAuth.instance;
     User?user;
     try{
@@ -26,6 +27,8 @@ class _AuthenticateState extends State<Authenticate> {
   final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    TextEditingController _emailController=TextEditingController();
+    TextEditingController _passwordController=TextEditingController();
     return Scaffold(
       body: Center(
         // width: 200,
@@ -53,9 +56,9 @@ class _AuthenticateState extends State<Authenticate> {
                 child: Column(
                   children: [
                     TextFormField(
-                      
+                      controller: _emailController,
                       decoration: InputDecoration(
-                        hintText: "Enter user name here.",
+                        hintText: "Enter email here.",
                         focusColor: Colors.blueGrey,
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -75,6 +78,7 @@ class _AuthenticateState extends State<Authenticate> {
                     ),
                     SizedBox(height: 20),
                     TextFormField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         hintText: "Enter password here.",
                         focusColor: Colors.blueGrey,
@@ -111,8 +115,13 @@ class _AuthenticateState extends State<Authenticate> {
                       height: 50,
                       child:ElevatedButton(
                       
-                      onPressed: () {
-                        
+                      onPressed: () async{
+                        User?user=await loginUsingEmailPassword(email:_emailController.text, password: _passwordController.text,context: context);
+                        print("user is");
+                        print(user);
+                        if(user!=null){
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Home()));
+                        }
                       },
                       child: const Text('Login',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                     ),
@@ -122,7 +131,7 @@ class _AuthenticateState extends State<Authenticate> {
                       width: double.infinity,
                       child:TextButton(
                         onPressed: () {
-                          
+
                         },
                         child: const Text('Do you have an account? Sign up now'),
                       ),
