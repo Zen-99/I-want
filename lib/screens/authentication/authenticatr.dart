@@ -20,8 +20,11 @@ class _AuthenticateState extends State<Authenticate> {
     }on FirebaseAuthException catch(e){
       if(e.code=="user-not-found"){
         print("No user found");
+      }else{
+        print(e.code);
       }
     }
+    return user;
   }
 
   final _formkey = GlobalKey<FormState>();
