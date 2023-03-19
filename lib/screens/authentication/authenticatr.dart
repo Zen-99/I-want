@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:i_want/screens/authentication/signup.dart';
 import 'package:i_want/screens/home/home.dart';
 
 class Authenticate extends StatefulWidget {
@@ -134,9 +135,10 @@ class _AuthenticateState extends State<Authenticate> {
                       width: double.infinity,
                       child:TextButton(
                         onPressed: () {
-
+                          // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>SignUp()));
+                           Navigator.push(context,MaterialPageRoute(builder: (context) => const SignUp()));
                         },
-                        child: const Text('Do you have an account? Sign up now'),
+                        child: const Text("Don't you have an account? Sign up now"),
                       ),
                     ),
                   ],
