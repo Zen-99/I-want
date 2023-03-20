@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:i_want/screens/authentication/signup.dart';
 import 'package:i_want/screens/home/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:i_want/screens/seller/home/sellerHome.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({super.key});
@@ -12,6 +14,7 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
+
   static Future<User?> loginUsingEmailPassword({required String email,required String password,required BuildContext context}) async {
     FirebaseAuth auth =FirebaseAuth.instance;
     User?user;
@@ -33,6 +36,7 @@ class _AuthenticateState extends State<Authenticate> {
   Widget build(BuildContext context) {
     TextEditingController _emailController=TextEditingController();
     TextEditingController _passwordController=TextEditingController();
+
     return Scaffold(
       body: Center(
         // width: 200,
@@ -121,10 +125,24 @@ class _AuthenticateState extends State<Authenticate> {
                       
                       onPressed: () async{
                         User?user=await loginUsingEmailPassword(email:_emailController.text, password: _passwordController.text,context: context);
-                        print("user is");
-                        print(user);
+                        print(_emailController.text);
                         if(user!=null){
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Home()));
+
+                          final collectionRef = FirebaseFirestore.instance.collection('Users');
+                          final query = collectionRef.where('email', isEqualTo: _emailController.text);
+                          final snapshot = await query.get();
+                          // print(snapshot);
+                          final List<DocumentSnapshot> docs = snapshot.docs;
+                          
+                          final data = docs[0].data() as Map<String, dynamic>;
+                          print(data['role']);
+                          
+
+                          if(data['role']=="BUYER"){
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Home()));
+                          }else if(data['role']=="SELLER"){
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>SellerHome()));
+                          }
                         }
                       },
                       child: const Text('Login',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),

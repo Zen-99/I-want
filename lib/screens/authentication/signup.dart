@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import "package:flutter/material.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:i_want/screens/authentication/authenticatr.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:i_want/screens/home/home.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -14,11 +18,25 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final _formkey = GlobalKey<FormState>();
-    TextEditingController _emailController=TextEditingController();
-    TextEditingController _passwordController=TextEditingController();
-    TextEditingController _confirmPasswordController=TextEditingController();
-    static Future<User?> signupUsingEmailPassword({required String email,required String password,required String confirmPassword,required BuildContext context}) async {
+  TextEditingController _emailController=TextEditingController();
+  TextEditingController _passwordController=TextEditingController();
+  TextEditingController _confirmPasswordController=TextEditingController();
+
+  Future<void> addUser({required String email}) {
+    CollectionReference users = FirebaseFirestore.instance.collection('Users');
+    return users
+        .add({
+          'email':email,
+          'role':'BUYER',
+        })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
+
+  static Future<User?> signupUsingEmailPassword({required String email,required String password,required String confirmPassword,required BuildContext context}) async {
     FirebaseAuth auth =FirebaseAuth.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
     User?user;
     try{
       if(password!=confirmPassword){
@@ -26,7 +44,7 @@ class _SignUpState extends State<SignUp> {
       }else{
         UserCredential response=await auth.createUserWithEmailAndPassword(email: email, password: password);
         user=response.user;
-        print(response.user?.uid);
+        print(response.user?.email);
       }
     }on FirebaseAuthException catch(e){
       if(e.code=="user-not-found"){
@@ -137,6 +155,11 @@ class _SignUpState extends State<SignUp> {
                           
                             onPressed: () async{
                               User?user=await signupUsingEmailPassword(email:_emailController.text, password: _passwordController.text,confirmPassword:_confirmPasswordController.text,context: context);
+                              if(user?.email!=null){
+                                String? email=user?.email;
+                                await addUser(email: email.toString());
+                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Home()));
+                              }
                             },
                             child: const Text('Sign up',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                           ),

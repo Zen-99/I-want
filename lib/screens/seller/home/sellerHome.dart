@@ -13,7 +13,7 @@ class SellerHome extends StatefulWidget {
 }
 
 class _SellerHomeState extends State<SellerHome> {
-    int _selectedIndex = 0;
+  int _selectedIndex = 0;
   final _textController=TextEditingController();
   static const List<Widget> _widgetOptions = <Widget>[
     Stats(),
