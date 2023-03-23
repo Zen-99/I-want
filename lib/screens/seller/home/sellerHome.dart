@@ -19,6 +19,7 @@ class _SellerHomeState extends State<SellerHome> {
     Stats(),
     MyItems(),
     SellerProfile(),
+    //
   ];
   void _onItemTapped(int index) {
     setState(() {
