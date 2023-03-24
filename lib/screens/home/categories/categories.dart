@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:i_want/screens/home/categories/selectedItem.dart';
 
 class Categories extends StatefulWidget {
   const Categories({super.key});
@@ -12,7 +13,13 @@ class Categories extends StatefulWidget {
 
 class _CategoriesState extends State<Categories> {
 
-    Widget categories(String categoryType)=>Container(
+    Widget categories(String categoryType)=>GestureDetector(
+      onTap: () =>{
+        print("On tap called"),
+        Navigator.push(context,MaterialPageRoute(builder: (context) => const SelectedItem()))
+
+      },
+      child:Container(
       child:Card(
           shape: RoundedRectangleBorder(
             side: BorderSide(
@@ -32,9 +39,10 @@ class _CategoriesState extends State<Categories> {
       ),
       width:150,
       height:80,
+      )
     );
 
-  List<String> categoryArr = ["Electronics","Furniture","Cloths","Vehicles","Sport Items"];
+  List<String> categoryArr = ["Electronics","Furniture","Cloths","Vehicles","Sport Items","Other"];
 
   List<Column> getCategoryList(){
     List<Column> catergoryNameArr=[];
