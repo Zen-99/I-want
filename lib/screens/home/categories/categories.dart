@@ -82,11 +82,7 @@ class _CategoriesState extends State<Categories> {
     List<Column> catergoryNameArr=[];
     
     for(int i=0;i<categoryArr.length;i++){
-      if(dataArr.isEmpty){
-        print("empty");
-      }else{
-        print(dataArr.length);
-      }
+
       
       catergoryNameArr.add(
       Column(
@@ -102,8 +98,13 @@ class _CategoriesState extends State<Categories> {
           child:ListView.builder(
             scrollDirection: Axis.horizontal,
             itemBuilder:(context, index){
-              if(dataArr.isNotEmpty ){
+              if(dataArr[index]?.category==categoryArr[i]){
                 return categories("${dataArr[index].name}");
+              }else{
+                return Container(
+                  height: 0,
+                  width: 0,
+                );
               }
             },
             itemCount: dataArr.length,
