@@ -3,19 +3,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:i_want/screens/home/categories/selectedItem.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+
+class Item{
+  String? name;
+  int? id;
+  String? imageUrl;
+  String? category;
+
+  Item(this.name,this.id,this.imageUrl,this.category);
+}
 class Categories extends StatefulWidget {
   const Categories({super.key});
 
   @override
   State<Categories> createState() => _CategoriesState();
 }
-
+  var dataArr=[];
 class _CategoriesState extends State<Categories> {
+    @override
+    void initState(){
+       List<Item> dataArr=[];
+       getData();
+       super.initState();
+    }
 
-    Widget categories(String categoryType)=>GestureDetector(
+    List<String> categoryArr = ["Electronics","Furniture","Cloths","Vehicles","Sport Items","Others"];
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    getData() async {
+        if(dataArr.isNotEmpty){
+          dataArr=[];
+        }
+        await FirebaseFirestore.instance.collection('Items').get().then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) {
+             setState(() {
+               dataArr.add(Item(doc.get("name"), doc.get("item_id"), doc.get("image1"), doc.get("category")));
+             });
+          })
+        });
+
+          
+      }
+
+    Widget categories(data)=>GestureDetector(
       onTap: () =>{
-        print("On tap called"),
+        print(data),
         Navigator.push(context,MaterialPageRoute(builder: (context) => const SelectedItem()))
 
       },
@@ -33,7 +69,7 @@ class _CategoriesState extends State<Categories> {
             child:Image.network('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bW9iaWxlJTIwcGhvbmV8ZW58MHx8MHx8&w=1000&q=80'),
           ),
           const SizedBox(height: 6),
-          Text(categoryType,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          Text(data,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
         ]  
         ),
       ),
@@ -42,11 +78,16 @@ class _CategoriesState extends State<Categories> {
       )
     );
 
-  List<String> categoryArr = ["Electronics","Furniture","Cloths","Vehicles","Sport Items","Other"];
-
-  List<Column> getCategoryList(){
+  List<Column> getCategoryList() {
     List<Column> catergoryNameArr=[];
+    
     for(int i=0;i<categoryArr.length;i++){
+      if(dataArr.isEmpty){
+        print("empty");
+      }else{
+        print(dataArr.length);
+      }
+      
       catergoryNameArr.add(
       Column(
       children:[
@@ -58,20 +99,21 @@ class _CategoriesState extends State<Categories> {
         Container(
           padding: EdgeInsets.fromLTRB(15,0,15,0),
           height:210,
-          child:ListView(
+          child:ListView.builder(
             scrollDirection: Axis.horizontal,
-            children: [
-              categories(categoryArr[i]),
-              SizedBox(width: 8),
-              categories(categoryArr[i]),
-              SizedBox(width: 8),
-              categories(categoryArr[i]),
-              SizedBox(width: 8),
-              categories(categoryArr[i])
-            ],
+            itemBuilder:(context, index){
+              if(dataArr.isNotEmpty ){
+                return categories("${dataArr[index].name}");
+              }
+            },
+            itemCount: dataArr.length,
+
+
+            // children: [categories(categoryArr[i]),
+            // SizedBox(width: 8),]
           ),
         ),
-    ]),
+      ]),
       );
     }
     return catergoryNameArr;
@@ -79,7 +121,11 @@ class _CategoriesState extends State<Categories> {
 
   @override
   Widget build(BuildContext context) {
-
+    // for(int i=0;i<categoryArr.length;i++){
+    //   setState(() {
+    //     getData(categoryArr[i]);
+    //   });   
+    // }
     return Scaffold(
       appBar:AppBar(
         title: const Text('Categories'),
