@@ -49,10 +49,12 @@ class _CategoriesState extends State<Categories> {
           
       }
 
-    Widget categories(data)=>GestureDetector(
+    Widget categories(name,imgUrl,itemId)=>GestureDetector(
       onTap: () =>{
-        print(data),
-        Navigator.push(context,MaterialPageRoute(builder: (context) => const SelectedItem()))
+        print(name),
+        print(itemId),
+        itemId=itemId.toString(),
+        Navigator.push(context,MaterialPageRoute(builder: (context) => SelectedItem(id:itemId,)))
 
       },
       child:Container(
@@ -66,10 +68,15 @@ class _CategoriesState extends State<Categories> {
         child:Column(
           children:[
           Container(
-            child:Image.network('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bW9iaWxlJTIwcGhvbmV8ZW58MHx8MHx8&w=1000&q=80'),
+            width: 150,
+            height: 150,
+            child:Image.network(imgUrl),
           ),
           const SizedBox(height: 6),
-          Text(data,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          Container(
+            child: Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          )
+          
         ]  
         ),
       ),
@@ -99,7 +106,7 @@ class _CategoriesState extends State<Categories> {
             scrollDirection: Axis.horizontal,
             itemBuilder:(context, index){
               if(dataArr[index]?.category==categoryArr[i]){
-                return categories("${dataArr[index].name}");
+                return categories("${dataArr[index].name}",dataArr[index].imageUrl,dataArr[index].id);
               }else{
                 return Container(
                   height: 0,

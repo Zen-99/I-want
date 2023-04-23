@@ -1,13 +1,18 @@
+import 'dart:math';
+
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import "package:flutter/material.dart";
 import 'package:comment_box/comment/comment.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class SelectedItem extends StatefulWidget {
-  const SelectedItem({super.key});
+  final String id;
+
+  const SelectedItem({super.key, required this.id, });
 
   
   @override
@@ -18,8 +23,6 @@ class _SelectedItemState extends State<SelectedItem> {
 
   final formKey = GlobalKey<FormState>();
   final TextEditingController commentController = TextEditingController();
-
-
   
   List filedata = [
     {
@@ -87,160 +90,203 @@ class _SelectedItemState extends State<SelectedItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar:AppBar(
-        title: const Text('Samsung A52'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.blue,
-        shadowColor: Theme.of(context).colorScheme.shadow,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Colors.blue,
-            ),
-            onPressed: () {
-              // do something
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.category,
-              color: Colors.blue,
-            ),
-            onPressed: () {
-              // do something
-            },
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child:Column(
-        children: [
-          SizedBox(height: 30),
-          Text("Time Remaining",style: TextStyle(fontSize: 25)),
-          SizedBox(height: 20),
-          TimerCountdown(
-            format: CountDownTimerFormat.daysHoursMinutesSeconds,
-            endTime: DateTime.now().add(
-              Duration(
-                days: 5,
-                hours: 14,
-                minutes: 27,
-                seconds: 34,
-              ),
-            ),
-            onEnd: () {
-              print("Timer finished");
-            },
-          ),
-          SizedBox(height: 30),
-          CarouselSlider(
-            options: CarouselOptions(
-              height: 250.0,
-              aspectRatio: 16/9,
-              viewportFraction: 0.8,
-              autoPlay: false,
-              autoPlayInterval: Duration(seconds: 5),
-              autoPlayCurve: Curves.decelerate,
-               enlargeCenterPage: true,
-               enlargeFactor: 0.3,
-            ),
-            items: [1,2,3,4,5].map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.blue
-                    ),
-                  );
-                },
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 20),
-          Container(
-            margin: EdgeInsets.all(15),
-            height: 25,
-            width: MediaQuery.of(context).size.width,
-            child:Text("Samsung A52",textAlign: TextAlign.left,style: TextStyle(fontSize: 25)),
-          ),
-          SizedBox(height: 20),
-          Container(
-            margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-            height: 20,
-            width: MediaQuery.of(context).size.width,
-            child: Row(children: [
-              Text("Current Owner",style: TextStyle(fontSize: 20)),
-              SizedBox(width: 20),
-              Text("Roshan Senevirathne",style: TextStyle(fontSize: 20)),
-            ]),
-          ),
-          //check commit
-          // SizedBox(height: 10),
-          Container(
-            margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-            height: 20,
-            width: MediaQuery.of(context).size.width,
-            child: Row(children: [
-              Text("Current Price",style: TextStyle(fontSize: 20)),
-              SizedBox(width: 20),
-              Text("Rs.4900.00",style: TextStyle(fontSize: 20)),
-            ]),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(15, 25, 15, 5),
-            child: Column(children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 15,
-                child: Text("Comments",style: TextStyle(fontSize: 18)),
-              ),
-              SizedBox(height: 15),
-              Container(
-                width: MediaQuery.of(context).size.width-20,
-                height:500,
-                child: CommentBox(
-                  userImage: CommentBox.commentImageParser(
-                      imageURLorPath: "https://www.adeleyeayodeji.com/img/IMG_20200522_121756_834_2.jpg"),
-                  child: commentChild(filedata),
-                  labelText: 'Write a comment...',
-                  errorText: 'Comment cannot be blank',
-                  withBorder: false,
-                  sendButtonMethod: () {
-                    if (formKey.currentState!.validate()) {
-                      print(commentController.text);
-                      setState(() {
-                        var value = {
-                          'name': 'New User',
-                          'pic':
-                              'https://lh3.googleusercontent.com/a-/AOh14GjRHcaendrf6gU5fPIVd8GIl1OgblrMMvGUoCBj4g=s400',
-                          'message': commentController.text,
-                          'date': '2021-01-01 12:00:00'
-                        };
-                        filedata.insert(0, value);
-                      });
-                      commentController.clear();
-                      FocusScope.of(context).unfocus();
-                    } else {
-                      print("Not validated");
-                    }
-                  },
-                  formKey: formKey,
-                  commentController: commentController,
-                  backgroundColor: Colors.blue,
-                  textColor: Colors.white,
-                  sendWidget: Icon(Icons.send_sharp, size: 30, color: Colors.white),
+
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+        .collection("Items")
+        .where("item_id",isEqualTo: int.parse(widget.id))
+        .snapshots(),
+      builder: (context,AsyncSnapshot<QuerySnapshot>snapshot){
+        if(snapshot.hasData){
+            var timeDiff=DateTime.now().toUtc().difference(DateTime.utc(int.parse(snapshot.data?.docs[0]['lastSubmit']['year']),int.parse(snapshot.data?.docs[0]['lastSubmit']['month']),int.parse(snapshot.data?.docs[0]['lastSubmit']['date']),int.parse(snapshot.data?.docs[0]['lastSubmit']['hours']),int.parse(snapshot.data?.docs[0]['lastSubmit']['mins']),int.parse(snapshot.data?.docs[0]['lastSubmit']['sec'])));
+            List<String> words = timeDiff.toString().split(":");
+            var dayDiff=int.parse(snapshot.data?.docs[0]['clockData']['days'])-(int.parse(words[0])/24);
+            var hourDiff=int.parse(snapshot.data?.docs[0]['clockData']['hours'])-(int.parse(words[0])%24);
+            var minsDiff=int.parse(snapshot.data?.docs[0]['clockData']['mins'])-int.parse(words[1]);
+            var secDiff=int.parse(snapshot.data?.docs[0]['clockData']['sec']) -int.parse((words[2].split("."))[0]);
+
+            // print(words);
+            // print(dayDiff);
+            return Scaffold(
+            appBar:AppBar(
+            title: Text(snapshot.data?.docs[0]['name'],),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.blue,
+            shadowColor: Theme.of(context).colorScheme.shadow,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.blue,
                 ),
+                onPressed: () {
+                  // do something
+                },
               ),
-            ]),
-          )
-        ]
-      ),
-      ),
-      
+              IconButton(
+                icon: Icon(
+                  Icons.category,
+                  color: Colors.blue,
+                ),
+                onPressed: () {
+                  // do something
+                },
+              )
+            ],
+          ),
+          body: SingleChildScrollView(
+            child:Column(
+            children: [
+              SizedBox(height: 30),
+              Text("Time Remaining",style: TextStyle(fontSize: 25)),
+              SizedBox(height: 20),
+              TimerCountdown(
+                format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                endTime: DateTime.now().add(
+                  Duration(
+                    days: dayDiff.toInt(),
+                    hours: hourDiff.toInt(),
+                    minutes:minsDiff.toInt(),
+                    seconds: secDiff.toInt()
+                    // days: 5,
+                    // hours: 5,
+                    // minutes:5,
+                    // seconds: 5,
+                  ),
+                ),
+                onEnd: () {
+                  print("Timer finished");
+                },
+              ),
+              SizedBox(height: 30),
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 250.0,
+                  aspectRatio: 16/9,
+                  viewportFraction: 0.8,
+                  autoPlay: false,
+                  autoPlayInterval: Duration(seconds: 5),
+                  autoPlayCurve: Curves.decelerate,
+                  enlargeCenterPage: true,
+                  enlargeFactor: 0.3,
+                ),
+                items: [snapshot.data?.docs[0]['image1'],snapshot.data?.docs[0]['image2'],snapshot.data?.docs[0]['image3']].map((i) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      if(i!=""){
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(
+                            // color: Colors.blue
+                          ),
+                          child:Image.network(i),
+                        );
+                      }else{
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(
+                            
+                          ),
+                          child:Image.network("https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930"),
+                        );
+                        
+                      }
+
+                    },
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 20),
+              Container(
+                margin: EdgeInsets.all(15),
+                height: 25,
+                width: MediaQuery.of(context).size.width,
+                child:Text(snapshot.data?.docs[0]['name'],textAlign: TextAlign.left,style: TextStyle(fontSize: 25)),
+              ),
+              SizedBox(height: 20),
+              Container(
+                margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                height: 20,
+                width: MediaQuery.of(context).size.width,
+                child: Row(children: [
+                  Text("Current Owner",style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 20),
+                  Text(snapshot.data?.docs[0]['owner'],style: TextStyle(fontSize: 20)),
+                ]),
+              ),
+              //check commit
+              // SizedBox(height: 10),
+              Container(
+                margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                height: 20,
+                width: MediaQuery.of(context).size.width,
+                child: Row(children: [
+                  Text("Current Price",style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 20),
+                  Text("Rs.${snapshot.data?.docs[0]['current_price']}.00",style: TextStyle(fontSize: 20)),
+                ]),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(15, 25, 15, 5),
+                child: Column(children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 15,
+                    child: Text("Comments",style: TextStyle(fontSize: 18)),
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                    width: MediaQuery.of(context).size.width-20,
+                    height:500,
+                    child: CommentBox(
+                      userImage: CommentBox.commentImageParser(
+                          imageURLorPath: "https://www.adeleyeayodeji.com/img/IMG_20200522_121756_834_2.jpg"),
+                      child: commentChild(filedata),
+                      labelText: 'Write a comment...',
+                      errorText: 'Comment cannot be blank',
+                      withBorder: false,
+                      sendButtonMethod: () {
+                        if (formKey.currentState!.validate()) {
+                          print(commentController.text);
+                          setState(() {
+                            var value = {
+                              'name': 'New User',
+                              'pic':
+                                  'https://lh3.googleusercontent.com/a-/AOh14GjRHcaendrf6gU5fPIVd8GIl1OgblrMMvGUoCBj4g=s400',
+                              'message': commentController.text,
+                              'date': '2021-01-01 12:00:00'
+                            };
+                            filedata.insert(0, value);
+                          });
+                          commentController.clear();
+                          FocusScope.of(context).unfocus();
+                        } else {
+                          print("Not validated");
+                        }
+                      },
+                      formKey: formKey,
+                      commentController: commentController,
+                      backgroundColor: Colors.blue,
+                      textColor: Colors.white,
+                      sendWidget: Icon(Icons.send_sharp, size: 30, color: Colors.white),
+                    ),
+                  ),
+                ]),
+              )
+            ]
+          ),
+          ),
+          
+        );
+        }else{
+          return Container(
+
+          );
+        }
+      },
     );
+
   }
 }
