@@ -106,7 +106,13 @@ class _CategoriesState extends State<Categories> {
             scrollDirection: Axis.horizontal,
             itemBuilder:(context, index){
               if(dataArr[index]?.category==categoryArr[i]){
-                return categories("${dataArr[index].name}",dataArr[index].imageUrl,dataArr[index].id);
+                print(dataArr[index].imageUrl);
+                if(dataArr[index]?.imageUrl=="null"){
+                  return categories("${dataArr[index].name}","https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930",dataArr[index].id);
+                }else{
+                  return categories("${dataArr[index].name}",dataArr[index].imageUrl,dataArr[index].id);
+                }
+                  
               }else{
                 return Container(
                   height: 0,

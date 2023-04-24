@@ -8,7 +8,14 @@ import "package:flutter/material.dart";
 import 'package:comment_box/comment/comment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class Comment{
+  String? name;
+  String? pic;
+  String? date;
+  String? message;
 
+  Comment(this.name,this.pic,this.date,this.message);
+}
 class SelectedItem extends StatefulWidget {
   final String id;
 
@@ -18,38 +25,33 @@ class SelectedItem extends StatefulWidget {
   @override
   State<SelectedItem> createState() => _SelectedItemState();
 }
-
+List filedata = [];
 class _SelectedItemState extends State<SelectedItem> {
 
   final formKey = GlobalKey<FormState>();
   final TextEditingController commentController = TextEditingController();
   
-  List filedata = [
-    {
-      'name': 'Chuks Okwuenu',
-      'pic': 'https://www.adeleyeayodeji.com/img/IMG_20200522_121756_834_2.jpg',
-      'message': 'I love to code',
-      'date': '2021-01-01 12:00:00'
-    },
-    {
-      'name': 'Biggi Man',
-      'pic': 'https://www.adeleyeayodeji.com/img/IMG_20200522_121756_834_2.jpg',
-      'message': 'Very cool',
-      'date': '2021-01-01 12:00:00'
-    },
-    {
-      'name': 'Tunde Martins',
-      'pic': 'https://www.adeleyeayodeji.com/img/IMG_20200522_121756_834_2.jpg',
-      'message': 'Very cool',
-      'date': '2021-01-01 12:00:00'
-    },
-    {
-      'name': 'Biggi Man',
-      'pic': 'https://www.adeleyeayodeji.com/img/IMG_20200522_121756_834_2.jpg',
-      'message': 'Very cool',
-      'date': '2021-01-01 12:00:00'
-    },
-  ];
+  @override
+  void initState(){
+      List<Comment> filedata=[];
+      getComments();
+      super.initState();
+  }
+    getComments() async {
+      if(filedata.isNotEmpty){
+        filedata=[];
+      }
+      print("getCOmment called");
+      await FirebaseFirestore.instance.collection('Comments').where("item_id",isEqualTo: int.parse(widget.id)).get().then((QuerySnapshot querySnapshot) => {
+        querySnapshot.docs.forEach((doc) {
+            setState(() {
+              filedata.add(Comment(doc.get("name"), doc.get("pic"), doc.get("date"),doc.get("message")));
+            });
+        })
+      });
+
+        
+    }
   Widget commentChild(data) {
     return ListView(
       scrollDirection: Axis.vertical,
@@ -72,15 +74,15 @@ class _SelectedItemState extends State<SelectedItem> {
                   child: CircleAvatar(
                       radius: 50,
                       backgroundImage: CommentBox.commentImageParser(
-                          imageURLorPath: data[i]['pic'])),
+                          imageURLorPath: data?[i].pic)),
                 ),
               ),
               title: Text(
-                data[i]['name'],
+                data?[i].name,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(data[i]['message']),
-              trailing: Text(data[i]['date'], style: TextStyle(fontSize: 10)),
+              subtitle: Text(data?[i].message),
+              trailing: Text(data?[i].date, style: TextStyle(fontSize: 10)),
             ),
           )
       ],
@@ -90,7 +92,6 @@ class _SelectedItemState extends State<SelectedItem> {
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder(
       stream: FirebaseFirestore.instance
         .collection("Items")
@@ -148,10 +149,6 @@ class _SelectedItemState extends State<SelectedItem> {
                     hours: hourDiff.toInt(),
                     minutes:minsDiff.toInt(),
                     seconds: secDiff.toInt()
-                    // days: 5,
-                    // hours: 5,
-                    // minutes:5,
-                    // seconds: 5,
                   ),
                 ),
                 onEnd: () {
