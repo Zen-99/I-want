@@ -5,6 +5,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import "package:flutter/material.dart";
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:comment_box/comment/comment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -30,6 +32,9 @@ class _SelectedItemState extends State<SelectedItem> {
 
   final formKey = GlobalKey<FormState>();
   final TextEditingController commentController = TextEditingController();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+
   
   @override
   void initState(){
@@ -92,6 +97,10 @@ class _SelectedItemState extends State<SelectedItem> {
 
   @override
   Widget build(BuildContext context) {
+
+    final User? user = auth.currentUser;
+    final uEmail = user?.email;
+
     return StreamBuilder(
       stream: FirebaseFirestore.instance
         .collection("Items")
@@ -224,6 +233,34 @@ class _SelectedItemState extends State<SelectedItem> {
                   SizedBox(width: 20),
                   Text("Rs.${snapshot.data?.docs[0]['current_price']}.00",style: TextStyle(fontSize: 20)),
                 ]),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(15, 25, 15, 5),
+                width: double.infinity,
+                height: 50,
+                child:StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                  .collection("Items")
+                  .where("item_id",isEqualTo: int.parse(widget.id))
+                  .snapshots(),
+                  builder: (context,AsyncSnapshot<QuerySnapshot>snapshot){
+                      if(snapshot.data?.docs[0]['current_buyer']==uEmail){
+                        return Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: const Text('In your hand',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                        );
+                      }else{
+                        return ElevatedButton(
+                          onPressed: () async{
+
+                          },
+                          child: const Text('Buy',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                        );
+                      }
+
+                  }
+                ),
               ),
               Container(
                 margin: EdgeInsets.fromLTRB(15, 25, 15, 5),
