@@ -124,7 +124,7 @@ class _StartpageState extends State<Startpage> {
                       Container(
                         margin:EdgeInsets.fromLTRB(15,25,5,25),  
                         width: (MediaQuery.of(context).size.width),
-                        child:new Text('Trending Categories', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
+                        child:new Text('Closing Today', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20))
                       ),
                       Container(
                         padding: EdgeInsets.fromLTRB(15,0,15,0),

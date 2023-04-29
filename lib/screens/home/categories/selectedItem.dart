@@ -34,7 +34,26 @@ class _SelectedItemState extends State<SelectedItem> {
   final TextEditingController commentController = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+    Future<void> addtoCart({required String docId,required String currBuyer, required String priceToPay,required String currPrice,
+    required int count,required String year,required String month,required String date,required String hours,required String mins,required String sec}) async {
+      CollectionReference items = FirebaseFirestore.instance.collection('Items');
+      items.doc(docId).update({
+        'current_buyer':currBuyer,
+        'price_to_pay':priceToPay,
+        'current_price':currPrice,
+        'clicked_count':count,
+        'lastSubmit':{
+          'year':year,
+          'month':month,
+          'date':date,
+          'hours':hours,
+          'mins':mins,
+          'sec':sec
+        }
+      }).then((value) => print("Added to cart"))
+        .catchError((error) => print("Failed to add to cart: $error"));;  
 
+    }
   
   @override
   void initState(){
@@ -170,7 +189,7 @@ class _SelectedItemState extends State<SelectedItem> {
                   height: 250.0,
                   aspectRatio: 16/9,
                   viewportFraction: 0.8,
-                  autoPlay: false,
+                  autoPlay: true,
                   autoPlayInterval: Duration(seconds: 5),
                   autoPlayCurve: Curves.decelerate,
                   enlargeCenterPage: true,
@@ -253,7 +272,25 @@ class _SelectedItemState extends State<SelectedItem> {
                       }else{
                         return ElevatedButton(
                           onPressed: () async{
+                            var docId=snapshot.data?.docs[0].reference.id;
 
+                            var count=snapshot.data?.docs[0]['clicked_count'];
+                            count=count+1;
+                            var currPrice=double.parse(snapshot.data?.docs[0]['current_price']);
+                            var initPrice=double.parse(snapshot.data?.docs[0]['init_price']);
+                            var priceToPay=currPrice;
+                            var currBuyer=uEmail.toString();
+
+                            currPrice=currPrice+initPrice/10;
+                            DateTime today = DateTime.now();
+                            var year=today.year;
+                            var month=today.month;
+                            var date=today.day;
+                            var hours=today.hour;
+                            var mins=today.minute;
+                            var sec=today.second;
+
+                            await addtoCart(docId:docId.toString(),currBuyer: currBuyer,count: count,currPrice: currPrice.toString(),priceToPay: priceToPay.toString(),year: year.toString(),month: month.toString(),date: date.toString(),hours: hours.toString(),mins: mins.toString(),sec: sec.toString());
                           },
                           child: const Text('Buy',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                         );
