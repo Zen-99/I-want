@@ -1,16 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:i_want/screens/home/categories/selectedItem.dart';
 class Cart extends StatefulWidget {
   const Cart({super.key});
 
   @override
   State<Cart> createState() => _CartState();
 }
-
+class Item{
+  String? name;
+  int? id;
+  String? priceToPay;
+  String? imageUrl;
+  String?owner;
+  
+  Item(this.id,this.name,this.owner,this.imageUrl,this.priceToPay);
+}
 class _CartState extends State<Cart> {
-      Widget cartItem()=>Container(
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  var itemArr=[];
+
+    @override
+    void initState(){
+       List<Item> itemArr=[];
+       getItems();
+       super.initState();
+    }
+    getItems() async {
+      if(itemArr.isNotEmpty){
+        itemArr=[];
+      }
+      final User? user = auth.currentUser;
+      final uEmail = user?.email;
+      await FirebaseFirestore.instance.collection('Items').where('current_buyer',isEqualTo:uEmail).get().then((QuerySnapshot querySnapshot) => {
+        querySnapshot.docs.forEach((doc) {
+            setState(() {
+              itemArr.add(Item(doc.get('item_id'),doc.get("name"), doc.get("owner"), doc.get("image1"), doc.get("price_to_pay")));
+            });
+        })
+      });
+    }
+      Widget cartItem(itemId,name,owner,img,price)=>GestureDetector(
+      onTap: () =>{
+        itemId=itemId.toString(),
+        Navigator.push(context,MaterialPageRoute(builder: (context) => SelectedItem(id:itemId,)))
+
+      },
+      child:Container(
+      margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
       child:Card(
           shape: RoundedRectangleBorder(
             side: BorderSide(
@@ -26,41 +69,32 @@ class _CartState extends State<Cart> {
               height:(MediaQuery.of(context).size.height),
               margin: EdgeInsets.all(10),
               child:Container(
-              child: Image.network('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bW9iaWxlJTIwcGhvbmV8ZW58MHx8MHx8&w=1000&q=80'),
+              width: 40,
+              height: 40,
+              child: Image.network(img),
               ),
             ),
             SizedBox(width: 4),
             Container(
-              width:(MediaQuery.of(context).size.width)/1.8,
+              width:(MediaQuery.of(context).size.width)/2,
               height:(MediaQuery.of(context).size.height),
-              // color:Colors.blue,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     width: double.infinity,
-                    margin: EdgeInsets.fromLTRB(10, 6, 10, 4),
-                    child:Text('Samsung A52',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                    margin: EdgeInsets.fromLTRB(10, 6, 20, 4),
+                    child:Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                   ),
                   Container(
                     width: double.infinity,
                     margin: EdgeInsets.fromLTRB(10, 5, 10, 4),
-                    child:Text('by Roshan',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16,color: Colors.grey)),
+                    child:Text('by ${owner}',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16,color: Colors.grey)),
                   ),
                   Container(
                     width: double.infinity,
                     margin: EdgeInsets.fromLTRB(10, 5, 10, 4),
-                    child:Text('120\$',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
-                  ),
-                  
-                  Container(
-                    width: double.infinity,
-                    alignment:  Alignment.topRight,
-                    margin: EdgeInsets.fromLTRB(10, 5, 10, 4),
-                    child:ElevatedButton(
-                    
-                    onPressed: () {},
-                    child: const Text('remove'),
-                  ),
+                    child:Text('Rs.${price}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                   ),
               ],
               ),
@@ -70,7 +104,7 @@ class _CartState extends State<Cart> {
       ),
       width:(MediaQuery.of(context).size.width),
       height:160,
-      
+      ),
     );
 
   @override
@@ -102,17 +136,15 @@ class _CartState extends State<Cart> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child:Column(
-        children: [
-          SizedBox(height:10),
-          cartItem(),
-          cartItem(),
-          cartItem(),
-          cartItem(),
-          cartItem(),
-          cartItem(),
-        ])
+      body: Container(
+        height: double.infinity,
+        child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemBuilder:(context, index){
+              return cartItem(itemArr[index].id,itemArr[index].name,itemArr[index].owner,itemArr[index].imageUrl,itemArr[index].priceToPay);
+            },
+            itemCount: itemArr.length,
+          ),
       ),
     );
   }
