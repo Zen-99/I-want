@@ -94,7 +94,7 @@ class _CartState extends State<Cart> {
                   Container(
                     width: double.infinity,
                     margin: EdgeInsets.fromLTRB(10, 5, 10, 4),
-                    child:Text('Rs.${price}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                    child:Text('Rs.${price}0',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                   ),
               ],
               ),

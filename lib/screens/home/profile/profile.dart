@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:i_want/screens/authentication/authenticatr.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -12,24 +14,52 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-    Widget info()=>Container(
-    child:Card(
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: Color.fromARGB(255, 97, 99, 98),
-          ),
-          borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
-        ),
-      child:Column(
-        children:[
+    final FirebaseAuth _auth = FirebaseAuth.instance;
 
-      ]  
-      ),
-    ),
-    margin: EdgeInsets.fromLTRB(10,0,10,0),
-    width:(MediaQuery.of(context).size.width),
-    height:80,
-  );
+    Widget info(String title)=>GestureDetector(
+        onTap: () =>{
+          if(title=="Log Out"){
+             _auth.signOut(),
+              Navigator.push(context,MaterialPageRoute(builder: (context) => Authenticate()))
+          }
+
+        },
+        child:Container(
+        child:Card(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Color.fromARGB(255, 97, 99, 98),
+              ),
+              borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
+            ),
+          child:Row(
+            children:[
+              Container(
+                margin: EdgeInsets.fromLTRB(20,0,10,0),
+                width:(MediaQuery.of(context).size.width*2/3),
+                child: Text(title,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+              ),
+              Container(
+                width:(MediaQuery.of(context).size.width/8),
+                child:IconButton(
+                  icon: Icon(
+                    Icons.arrow_right,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    // do something
+                  },
+                ) ,
+              )
+          ]  
+          ),
+        ),
+        margin: EdgeInsets.fromLTRB(10,0,10,0),
+        width:(MediaQuery.of(context).size.width),
+        height:80,
+      )
+    );
+
   @override
   Widget build(BuildContext context) {
     
@@ -98,15 +128,17 @@ class _ProfileState extends State<Profile> {
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      // do something
+                      
                     },
                   ),
                 ],
               )
             ),
-            info(),
-            info(),
-            info()
+            SizedBox(height: 50,),
+            info("My Account"),
+            info("Notification"),
+            info("Help Center"),
+            info("Log Out"),
           ],
         ),
 
