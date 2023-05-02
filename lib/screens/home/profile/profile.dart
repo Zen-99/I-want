@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:i_want/screens/authentication/authenticatr.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -62,7 +63,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final User? user = _auth.currentUser;
+    final uEmail = user?.email;
     return Scaffold(
       appBar:AppBar(
         title: const Text('Profile'),
@@ -93,47 +95,57 @@ class _ProfileState extends State<Profile> {
       body:Container(
         child:Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              margin: EdgeInsets.all(10),
-              //color: Colors.amber,
-              height:180,
-              width: (MediaQuery.of(context).size.width),
-              child:Row(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    margin: EdgeInsets.all(20),
-                    child:ProfilePicture(
-                      name: 'Roshan Senevirathne',
-                      radius: 31,
-                      fontsize: 21,
-                      // img: 'https://avatars.githubusercontent.com/u/37553901?v=4',
-                    )
-                  ),
-                  Container(
-                    width: (MediaQuery.of(context).size.width)/2 ,
-                    height: 100,
-                    alignment: Alignment.center,
-                    //color: Colors.amber,
-                    child:Text("Roshan Senevirathne",style:TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 25))
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.edit,
-                      color: Colors.white,
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+              .collection("Users")
+              .where("email",isEqualTo: uEmail.toString())
+              .snapshots(),
+              builder:(context,AsyncSnapshot<QuerySnapshot>snapshot){
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                margin: EdgeInsets.all(10),
+                //color: Colors.amber,
+                height:180,
+                width: (MediaQuery.of(context).size.width),
+                child:Row(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      margin: EdgeInsets.all(20),
+                      child:ProfilePicture(
+                        img: snapshot.data?.docs[0]['pro_pic'],
+                        name: snapshot.data?.docs[0]['name'],
+                        radius: 31,
+                        fontsize: 21,
+                        // img: 'https://avatars.githubusercontent.com/u/37553901?v=4',
+                      )
                     ),
-                    onPressed: () {
-                      
-                    },
-                  ),
-                ],
-              )
-            ),
+                    Container(
+                      width: (MediaQuery.of(context).size.width)/2 ,
+                      height: 100,
+                      alignment: Alignment.center,
+                      //color: Colors.amber,
+                      child:Text(snapshot.data?.docs[0]['name'],style:TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 25))
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        
+                      },
+                    ),
+                  ],
+                )
+              );
+              }
+              ),
+
             SizedBox(height: 50,),
             info("My Account"),
             info("Notification"),
