@@ -29,6 +29,8 @@ class _SignUpState extends State<SignUp> {
         .add({
           'email':email,
           'role':'BUYER',
+          'name':"No Name",
+          'pro_pic':""
         })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
