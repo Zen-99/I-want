@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:i_want/screens/seller/auth/sellerBankDetails.dart';
 
 class SellerSignup extends StatefulWidget {
   const SellerSignup({super.key});
@@ -16,7 +17,8 @@ class _SellerSignupState extends State<SellerSignup> {
 
     return Scaffold(
           body: Center(
-            child:SingleChildScrollView(
+            child:Container(
+              height:750,
               // color: Colors.amber,
               child: Column(
                 children: [
@@ -67,7 +69,7 @@ class _SellerSignupState extends State<SellerSignup> {
                             },
                           ), 
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
                         Container(
                           padding: EdgeInsets.fromLTRB(35,0,35,5),
                           child: TextFormField(
@@ -91,80 +93,7 @@ class _SellerSignupState extends State<SellerSignup> {
                             },
                           ),
                         ),
-                        SizedBox(height: 30),
-                        Container(child:Column(children: [
-                          Text("Bank Details",textAlign: TextAlign.left,style: TextStyle(fontSize: 25)),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(35,10,35,5),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                hintText: "Account No",
-                                focusColor: Colors.blueGrey,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 2, color: Colors.blue), //<-- SEE HERE
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 3, color: Colors.blue), //<-- SEE HERE
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Empty';
-                                }
-                                return null;
-                              },
-                            ), 
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(35,5,35,5),
-                            child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Bank Name",
-                                  focusColor: Colors.blueGrey,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.blue), //<-- SEE HERE
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 3, color: Colors.blue), //<-- SEE HERE
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Empty';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.fromLTRB(35,5,35,5),
-                              child:TextFormField(
-                              decoration: InputDecoration(
-                                hintText: "Branch Name",
-                                focusColor: Colors.blueGrey,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 2, color: Colors.blue), //<-- SEE HERE
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 3, color: Colors.blue), //<-- SEE HERE
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Empty';
-                                }
-                                return null;
-                              },
-                            ), 
-                          )
-                        ]),),
-                        SizedBox(height: 40),
+                        SizedBox(height: 10),
                         Container(
                           padding: EdgeInsets.fromLTRB(35,5,35,5),
                           child: TextFormField(
@@ -188,7 +117,7 @@ class _SellerSignupState extends State<SellerSignup> {
                             },
                           ),
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
                         Container(
                           padding: EdgeInsets.fromLTRB(35,5,35,5),
                           child:TextFormField(
@@ -218,12 +147,12 @@ class _SellerSignupState extends State<SellerSignup> {
                           child:ElevatedButton(
                           
                           onPressed: () {
-                            
+                            Navigator.push(context,MaterialPageRoute(builder: (context) => const sellerBankDetails()));
                           },
-                          child: const Text('Sign up',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                          child: const Text('Next',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
                         ),
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 30),
                         Container(
                           width: double.infinity,
                           child:TextButton(
@@ -233,7 +162,7 @@ class _SellerSignupState extends State<SellerSignup> {
                             child: const Text('Already have an account? Login'),
                           ),
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 30),
                       ],
                     )
                   )

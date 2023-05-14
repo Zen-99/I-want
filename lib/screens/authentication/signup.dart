@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:i_want/screens/authentication/authenticatr.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:i_want/screens/home/home.dart';
+import 'package:i_want/screens/seller/auth/sellerSignup.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -172,6 +173,16 @@ class _SignUpState extends State<SignUp> {
                                Navigator.push(context,MaterialPageRoute(builder: (context) => const Authenticate()));
                             },
                             child: const Text('Already have an account? Login'),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          width: double.infinity,
+                          child:TextButton(
+                            onPressed: () {
+                               Navigator.push(context,MaterialPageRoute(builder: (context) => const SellerSignup()));
+                            },
+                            child: const Text('I want to become a seller'),
                           ),
                         ),
                       ],

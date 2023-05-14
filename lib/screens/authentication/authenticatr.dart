@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:i_want/screens/authentication/signup.dart';
 import 'package:i_want/screens/home/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:i_want/screens/seller/auth/sellerSignup.dart';
 import 'package:i_want/screens/seller/home/sellerHome.dart';
 
 class Authenticate extends StatefulWidget {
@@ -44,7 +45,7 @@ class _AuthenticateState extends State<Authenticate> {
         child:Container(
           // color: Colors.amber,
           width: 300,
-          height:500,
+          height:600,
           child: Column(
             children: [
               Container(
@@ -157,6 +158,16 @@ class _AuthenticateState extends State<Authenticate> {
                            Navigator.push(context,MaterialPageRoute(builder: (context) => const SignUp()));
                         },
                         child: const Text("Don't you have an account? Sign up now"),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      width: double.infinity,
+                      child:TextButton(
+                        onPressed: () {
+                            Navigator.push(context,MaterialPageRoute(builder: (context) => const SellerSignup()));
+                        },
+                        child: const Text('I want to become a seller'),
                       ),
                     ),
                   ],
