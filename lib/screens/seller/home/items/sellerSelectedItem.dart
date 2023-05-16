@@ -18,17 +18,17 @@ class Comment{
 
   Comment(this.name,this.pic,this.date,this.message);
 }
-class SelectedItem extends StatefulWidget {
+class SellerSelectedItem extends StatefulWidget {
   final String id;
 
-  const SelectedItem({super.key, required this.id, });
+  const SellerSelectedItem({super.key, required this.id, });
 
   
   @override
-  State<SelectedItem> createState() => _SelectedItemState();
+  State<SellerSelectedItem> createState() => _SellerSelectedItemState();
 }
 List filedata = [];
-class _SelectedItemState extends State<SelectedItem> {
+class _SellerSelectedItemState extends State<SellerSelectedItem> {
 
   final formKey = GlobalKey<FormState>();
   final TextEditingController commentController = TextEditingController();
@@ -252,52 +252,6 @@ class _SelectedItemState extends State<SelectedItem> {
                   SizedBox(width: 20),
                   Text("Rs.${snapshot.data?.docs[0]['current_price']}.00",style: TextStyle(fontSize: 20)),
                 ]),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(15, 25, 15, 5),
-                width: double.infinity,
-                height: 50,
-                child:StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                  .collection("Items")
-                  .where("item_id",isEqualTo: int.parse(widget.id))
-                  .snapshots(),
-                  builder: (context,AsyncSnapshot<QuerySnapshot>snapshot){
-                      if(snapshot.data?.docs[0]['current_buyer']==uEmail){
-                        return Container(
-                          width: double.infinity,
-                          height: 50,
-                          child: const Text('In your hand',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
-                        );
-                      }else{
-                        return ElevatedButton(
-                          onPressed: () async{
-                            var docId=snapshot.data?.docs[0].reference.id;
-
-                            var count=snapshot.data?.docs[0]['clicked_count'];
-                            count=count+1;
-                            var currPrice=double.parse(snapshot.data?.docs[0]['current_price']);
-                            var initPrice=double.parse(snapshot.data?.docs[0]['init_price']);
-                            var priceToPay=currPrice;
-                            var currBuyer=uEmail.toString();
-
-                            currPrice=currPrice+initPrice/10;
-                            DateTime today = DateTime.now();
-                            var year=today.year;
-                            var month=today.month;
-                            var date=today.day;
-                            var hours=today.hour;
-                            var mins=today.minute;
-                            var sec=today.second;
-
-                            await addtoCart(docId:docId.toString(),currBuyer: currBuyer,count: count,currPrice: currPrice.toString(),priceToPay: priceToPay.toString(),year: year.toString(),month: month.toString(),date: date.toString(),hours: hours.toString(),mins: mins.toString(),sec: sec.toString());
-                          },
-                          child: const Text('Buy',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
-                        );
-                      }
-
-                  }
-                ),
               ),
               Container(
                 margin: EdgeInsets.fromLTRB(15, 25, 15, 5),

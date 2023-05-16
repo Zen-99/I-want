@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:i_want/screens/seller/home/items/sellerSelectedItem.dart';
 class Item{
   String? name;
   int? id;
@@ -49,12 +50,12 @@ Widget categories(name, imgUrl, itemId) => GestureDetector(
             print(name),
             print(itemId),
             itemId = itemId.toString(),
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => SelectedItem(
-            //               id: itemId,
-            //             )))
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SellerSelectedItem(
+                          id: itemId,
+                        )))
           },
       child: Container(
         child: Card(
