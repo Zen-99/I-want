@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:comment_box/comment/comment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class Comment{
   String? name;
@@ -36,11 +37,15 @@ class _SelectedItemState extends State<SelectedItem> {
 
     Future<void> addtoCart({required String docId,required String currBuyer, required String priceToPay,required String currPrice,
     required int count,required String year,required String month,required String date,required String hours,required String mins,required String sec}) async {
+       DateTime now = DateTime.now();
+       String dayOfWeek = now.weekday.toString();
+       print(dayOfWeek);
       CollectionReference items = FirebaseFirestore.instance.collection('Items');
       items.doc(docId).update({
         'current_buyer':currBuyer,
         'price_to_pay':priceToPay,
         'current_price':currPrice,
+        'day_of_week':dayOfWeek,
         'clicked_count':count,
         'lastSubmit':{
           'year':year,
@@ -250,7 +255,7 @@ class _SelectedItemState extends State<SelectedItem> {
                 child: Row(children: [
                   Text("Current Price",style: TextStyle(fontSize: 20)),
                   SizedBox(width: 20),
-                  Text("Rs.${snapshot.data?.docs[0]['current_price']}.00",style: TextStyle(fontSize: 20)),
+                  Text("Rs.${snapshot.data?.docs[0]['current_price']}0",style: TextStyle(fontSize: 20)),
                 ]),
               ),
               Container(
