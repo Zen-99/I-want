@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:i_want/screens/seller/home/items/sellerSelectedItem.dart';
+import 'package:i_want/screens/seller/home/items/uploadPage.dart';
 class Item{
   String? name;
   int? id;
@@ -148,7 +149,14 @@ List<Column> getCategoryList() {
               alignment:  Alignment.topRight,
               margin: EdgeInsets.fromLTRB(10, 5, 10, 4),
               child:ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => UploadPage(
+                            
+                          )));
+              },
               child: const Text('Add New'),
             ),
             ),
