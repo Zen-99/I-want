@@ -13,6 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firabase_storage;
 import 'package:firebase_picture_uploader/firebase_picture_uploader.dart'; 
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class UploadPage extends StatefulWidget {
   const UploadPage({super.key});
@@ -436,14 +437,94 @@ String? selectedValue;
                 child:ElevatedButton(
                   onPressed: () async{
                     if(_productController.text==""){
+                      Alert(
+                        context: context,
+                        type: AlertType.error,
+                        title: "ERROR",
+                        desc: "Product Name cannot be empty",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "Got it",
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
                       print("Product Name cannot be empty");
                     }else if(_subCatController.text==""){
+                      Alert(
+                        context: context,
+                        type: AlertType.error,
+                        title: "ERROR",
+                        desc: "Sub category cannot be empty",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "Got it",
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
                       print("Sub category cannot be empty");
                     }else if(_priceController.text==""){
+                      Alert(
+                        context: context,
+                        type: AlertType.error,
+                        title: "ERROR",
+                        desc: "Price cannot be empty",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "Got it",
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
                       print("Price cannot be empty");
                     }else if(!isDouble(_priceController.text)){
+                      Alert(
+                        context: context,
+                        type: AlertType.error,
+                        title: "ERROR",
+                        desc: "Price format is incorrect",
+                        buttons: [
+                          DialogButton(
+                            child: Text(
+                              "Got it",
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
                       print("Price format is incorrect");
                     }else if(selectedValue==null){
+                        Alert(
+                          context: context,
+                          type: AlertType.error,
+                          title: "ERROR",
+                          desc: "Please select a category",
+                          buttons: [
+                            DialogButton(
+                              child: Text(
+                                "Got it",
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              width: 120,
+                            )
+                          ],
+                        ).show();
                        print("Please select a category");
                     }else{
                       String image1="",image2="",image3="";
@@ -457,6 +538,23 @@ String? selectedValue;
                         image3=await _uploadFile(file3);
                       }
                       await uploadItem(productName: _productController.text, category: selectedValue as String,subCategory: _subCatController.text,price: _priceController.text,image1: image1,image2: image2,image3: image3);
+                          Alert(
+                            context: context,
+                            type: AlertType.info,
+                            title: "Done",
+                            desc: "Item was uploaded successfully",
+                            buttons: [
+                              DialogButton(
+                                child: Text(
+                                  "Ok",
+                                  style: TextStyle(color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                                color: Color.fromRGBO(0, 179, 134, 1.0),
+                                radius: BorderRadius.circular(0.0),
+                              ),
+                            ],
+                          ).show();
                     }
 
                    
